@@ -42,11 +42,11 @@ ongoing_clean_operations = set()
 async def handle_clean(ctx, user_id, max_count):
     # Validation for user_id and max_count
     if user_id is None or max_count is None:
-        return await ctx.send("Usage: $clean [user_id] [max_count]. Both parameters are required.")
+        return await ctx.send("Usage: $clean [user_id] [max_count]. Both parameters are required.", delete_after=5)
 
     # Check if this user ID is already being cleaned
     if user_id in ongoing_clean_operations:
-        return await ctx.send(f"Clean operation already in progress for user ID {user_id}.")
+        return await ctx.send(f"Clean operation already in progress for user ID {user_id}.", delete_after=5)
 
     # Add the user_id to the ongoing operations set
     ongoing_clean_operations.add(user_id)
@@ -59,15 +59,15 @@ async def handle_clean(ctx, user_id, max_count):
     try:
         # Cleaning logic
         message_count = 0
-        async for message in ctx.channel.history(limit=100, after=datetime.datetime.now() - datetime.timedelta(days=1)):
-            if message.stickers and (user_id is None or message.author.id == user_id):
+        async for message in ctx.channel.history(limit=100):
+            if message.stickers:
                 await message.delete()
                 message_count += 1
                 await asyncio.sleep(1)
                 if message_count >= max_count:
                     break
     except Exception as e:
-        await ctx.send(f"An error occurred: {str(e)}")
+        await ctx.send(f"An error occurred: {str(e)}", delete_after=5)
     finally:
         ongoing_clean_operations.remove(user_id)
 
@@ -81,14 +81,6 @@ async def clean(ctx, user_id: int = None, max_count: int = None):
         # Send a random message from the response messages
         response = random.choice(response_messages)
         return await ctx.send(response)
-
-    # Proceed with the cleaning operation
-    await handle_clean(ctx, user_id, max_count)
-
-@bot.command(help="Alias for clean command. Usage: $zls [user_id] [max_count]")
-async def zls(ctx, user_id: int = None, max_count: int = None):
-    # Delete the command message
-    await ctx.message.delete()
 
     # Proceed with the cleaning operation
     await handle_clean(ctx, user_id, max_count)
