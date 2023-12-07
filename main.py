@@ -60,7 +60,7 @@ async def handle_clean(ctx, user_id, max_count):
         # Cleaning logic
         message_count = 0
         async for message in ctx.channel.history(limit=100):
-            if message.stickers:
+            if message.stickers and message.author.id == user_id:
                 await message.delete()
                 message_count += 1
                 await asyncio.sleep(1)
