@@ -15,21 +15,65 @@ from response_data import response_messages
 load_dotenv()
 
 # Globals for configuration
-STICKER_CHAIN_LIMIT = 5
+ASYNC_SLEEP = 1
+BLACKLIST = set()  # Add this line for blacklist
+BOT_CREATOR_ID = int(os.getenv('BOT_CREATOR_ID'))
 CLEAN_INTERVAL_SECONDS = 10
+COMMAND_PREFIX = "$"
 DELETE_MESSAGE_TIME = 5
 MESSAGE_HISTORY_LIMIT = 100
 NUKE_LIMIT = 1000
-ASYNC_SLEEP = 1
-COMMAND_PREFIX = "$"
-
+STICKER_CHAIN_LIMIT = 5
 TOKEN = os.getenv('DISCORD_TOKEN')
-BOT_CREATOR_ID = int(os.getenv('BOT_CREATOR_ID'))
 
 intents = discord.Intents.default()
 intents.message_content = True
 
 bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
+
+# Helper function to handle blacklist modification
+async def modify_blacklist(ctx, message_id, operation):
+    if not is_bot_creator(ctx):
+        response = random.choice(response_messages)
+        await ctx.send(response, delete_after=DELETE_MESSAGE_TIME)
+        return
+
+    if message_id is None:
+        await ctx.send("Please provide a valid message ID.", delete_after=DELETE_MESSAGE_TIME)
+        return
+
+    if operation == "add":
+        BLACKLIST.add(message_id)
+        await ctx.send(f"Message ID {message_id} added to blacklist.", delete_after=DELETE_MESSAGE_TIME)
+    elif operation == "remove":
+        BLACKLIST.discard(message_id)
+        await ctx.send(f"Message ID {message_id} removed from blacklist.", delete_after=DELETE_MESSAGE_TIME)
+
+
+@bot.command(name="addbl", help="Add a message ID to the blacklist. Usage: $addbl <message_id>")
+async def add_to_blacklist(ctx, message_id: int = None):
+    await ctx.message.delete()
+    await modify_blacklist(ctx, message_id, "add")
+
+
+@bot.command(name="clearbl", help="Clear the entire blacklist. Usage: $clearbl")
+async def clear_blacklist(ctx):
+    await ctx.message.delete()
+
+    if not is_bot_creator(ctx):
+        response = random.choice(response_messages)
+        await ctx.send(response, delete_after=DELETE_MESSAGE_TIME)
+        return
+
+    BLACKLIST.clear()
+    await ctx.send("Blacklist has been cleared.", delete_after=DELETE_MESSAGE_TIME)
+
+
+@bot.command(name="removebl", help="Remove a message ID from the blacklist. Usage: $removebl <message_id>")
+async def remove_from_blacklist(ctx, message_id: int = None):
+    await ctx.message.delete()
+    await modify_blacklist(ctx, message_id, "remove")
+
 
 @bot.command(name="clean", help="Deletes a specified number of messages with stickers. Usage: $clean [user_id] [max_count]")
 async def clean_stickers(ctx, user_id: int = None, max_count: int = None):
@@ -73,7 +117,7 @@ async def nuke(ctx, user_id: int = None, max_count: int = None):
 
     try:
         async for message in ctx.channel.history(limit=NUKE_LIMIT):  # Adjust the limit as needed
-            if message.author.id == user_id:
+            if message.author.id == user_id and message.id not in BLACKLIST:
                 await message.delete()
                 deleted_count += 1
                 await asyncio.sleep(ASYNC_SLEEP)
@@ -91,6 +135,11 @@ async def ping(ctx):
     latency = bot.latency * 1000  # Convert to milliseconds
     await ctx.send(f"Pong! Latency: {latency:.2f} ms", delete_after=DELETE_MESSAGE_TIME)
 
+# Helper function to check if the user is the bot creator
+def is_bot_creator(ctx):
+    return ctx.author.id == BOT_CREATOR_ID
+
+
 async def validate_command(ctx, user_id, max_count):
     await ctx.message.delete()
 
@@ -105,7 +154,7 @@ async def validate_command(ctx, user_id, max_count):
 
     # Validation for user_id and max_count
     if user_id is None or max_count is None:
-        return False, await ctx.send("Usage: [command] [user_id] [max_count].", delete_after=DELETE_MESSAGE_TIME)
+        return False, await ctx.send("Usage: [command] [user_id] [max_count]", delete_after=DELETE_MESSAGE_TIME)
 
     return True, None
 
