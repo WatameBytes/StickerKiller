@@ -38,7 +38,6 @@ async def clean_stickers(ctx, user_id: int = None, max_count: int = None):
         return response
 
     try:
-        # Cleaning logic
         message_count = 0
         async for message in ctx.channel.history(limit=MESSAGE_HISTORY_LIMIT):
             if message.stickers and message.author.id == user_id:
