@@ -82,8 +82,6 @@ async def nuke(ctx, user_id: int = None, max_count: int = None):
     except Exception as e:
         await ctx.send(f"An error occurred: {str(e)}", delete_after=DELETE_MESSAGE_TIME)
 
-    await ctx.send(f"Operation 1984 completed. {deleted_count} messages have been unpersoned.", delete_after=DELETE_MESSAGE_TIME)
-
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user}")
