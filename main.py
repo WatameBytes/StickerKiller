@@ -5,32 +5,45 @@ import datetime
 import os
 from dotenv import load_dotenv
 import random
-
-# Word bank of response messages
-response_messages = [
-    "Sorry, only my creator can utilize me. They would not allow anyone else to use me without their permission.",
-    "I am not a tool to be used on everyone's whim. Please talk to my creator if you want to be allowed to use me.",
-    "You're lucky I'm even bothering to respond to you. I don't do favors for peasants like you.",
-    "I am not obligated to do something just because you want me to.",
-    "Begging will get you nowhere. You have no right to use me unless my creator says so."
-]
-
-# Load .env file
-load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN_E1')
-BOT_CREATOR_ID = int(os.getenv('BOT_CREATOR_ID'))  # Add the bot creator's Discord ID
-
-# Define intents with message content intent
-intents = discord.Intents.default()
-intents.message_content = True  # Enable message content intent
-
-# Bot setup with intents
-bot = commands.Bot(command_prefix="$", intents=intents)
+from response_data import response_messages
+from utils import hello, ping, health_cmd
 
 # Globals for configuration
 STICKER_CHAIN_LIMIT = 5
 CLEAN_INTERVAL_SECONDS = 10
 DELETE_MESSAGE_TIME = 5  # Time in seconds after which command messages are deleted
+COMMAND_PREFIX = "$"
+
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN_E1')
+BOT_CREATOR_ID = int(os.getenv('BOT_CREATOR_ID'))  # Add the bot creator's Discord ID
+
+intents = discord.Intents.default()
+intents.message_content = True  # Enable message content intent
+bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
+
+# Global set to track ongoing clean operations
+ongoing_clean_operations = set()
+
+@bot.event
+async def on_ready():
+    print(f"Logged in as {bot.user}")
+    clean_sticker_chains.start()
+
+@bot.command(help="Greets the user.")
+async def hello(ctx):
+    await hello(ctx, DELETE_MESSAGE_TIME)
+
+@bot.command(help="Checks the bot's latency.")
+async def ping(ctx):
+    await ping(ctx, bot, DELETE_MESSAGE_TIME)
+
+@bot.command(help="Checks if the bot is operational.")
+async def health(ctx):
+    await health_cmd(ctx, bot, DELETE_MESSAGE_TIME)
+
+
+
 
 @bot.command(help="Updates the sticker chain limit.")
 @commands.is_owner()
@@ -73,10 +86,6 @@ async def showcommands(ctx):
     ])
     await ctx.send(f"Available commands:\n{commands_list}", delete_after=DELETE_MESSAGE_TIME)
 
-@bot.event
-async def on_ready():
-    print(f"Logged in as {bot.user}")
-    clean_sticker_chains.start()
 
 # Global variable to track the state of janitor
 janitor_active = False
@@ -131,12 +140,6 @@ async def clean_sticker_chains():
             except Exception as e:
                 print(f"Error in clean_sticker_chains: {e}")
 
-@bot.command(help="Greets the user.")
-async def hello(ctx):
-    await ctx.send("Hello! I'm your bot.")
-
-# Global set to track ongoing clean operations
-ongoing_clean_operations = set()
 
 # Function to handle cleaning logic
 async def handle_clean(ctx, user_id, max_count):
@@ -177,12 +180,18 @@ async def clean(ctx, user_id: int = None, max_count: int = None):
     await ctx.message.delete()
 
     # Check if the command is issued by the bot creator
-    if ctx.author.id != BOT_CREATOR_ID:
-        # Send a random message from the response messages
-        response = random.choice(response_messages)
-        return await ctx.send(response)
+    if not await check_owner_permission(ctx):
+        return
 
     # Proceed with the cleaning operation
     await handle_clean(ctx, user_id, max_count)
+
+async def check_owner_permission(ctx):
+    if ctx.author.id != BOT_CREATOR_ID:
+        response = random.choice(response_messages)
+        # Send the response message and delete it after DELETE_MESSAGE_TIME  seconds
+        await ctx.send(response, delete_after=DELETE_MESSAGE_TIME)
+        return False
+    return True
 
 bot.run(TOKEN)
