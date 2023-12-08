@@ -1,6 +1,6 @@
-# Discord Bot README
+# Sticker Killer README
 
-This is a Discord bot written in Python that provides several commands for managing messages in a server. It is designed to help moderate a server by allowing the deletion of messages with stickers and the ability to "nuke" messages from a specific user.
+This Discord bot, written in Python, provides several commands for managing messages in a server. It's designed to help moderate a server by allowing the deletion of messages with stickers and enabling the "nuke" of messages from specific users.
 
 ## Prerequisites
 
@@ -14,33 +14,35 @@ You will also need to create a Discord bot and obtain a token. Follow the offici
 
 Clone or download this repository to your local machine.
 
-Install the required Python libraries using pip:
-
-```shell
-pip install -r requirements.txt
-```
+Install the necessary Python libraries. You can do this by manually installing each library your project depends on using pip.
 
 Create a .env file in the project directory and add the following environment variables:
 
     DISCORD_TOKEN=<Your Discord Bot Token>
     BOT_CREATOR_ID=<Your Discord User ID>
 
-Replace <Your Discord Bot Token> with your bot's token and <Your Discord User ID> with your user ID.
-
 # Configuration
 
 You can customize the bot's behavior by modifying the following global variables in the code:
 
     STICKER_CHAIN_LIMIT: The maximum number of consecutive messages with stickers before stopping the cleaning process.
+
     CLEAN_INTERVAL_SECONDS: The interval in seconds for checking and cleaning messages with stickers.
+
     DELETE_MESSAGE_TIME: The time in seconds to delete response messages automatically.
+
     MESSAGE_HISTORY_LIMIT: The maximum number of messages to check during cleaning.
+
     NUKE_LIMIT: The maximum number of messages to nuke when using the $1984 command.
+
     ASYNC_SLEEP: The delay in seconds between message deletions during cleaning and nuking.
+
     COMMAND_PREFIX: The prefix used for bot commands.
 
 # Bot Commands
-
+    $addbl [message_id]: Add a message to the blacklist to prevent $1984 from deleting it.
+    $removebl [message_id]: Removes a message from the blacklist, allowing $1984 to delete it.
+    $clearbl: Clear's the blacklist.
     $clean [user_id] [max_count]: Deletes a specified number of messages with stickers sent by a user.
     $hello: Greets the user with a simple message.
     $health: Checks if the bot is operational and displays its latency.
