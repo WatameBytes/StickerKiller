@@ -1,7 +1,7 @@
-async def hello(ctx, DELETE_MESSAGE_TIME):
+async def hello_cmd(ctx, DELETE_MESSAGE_TIME):
     await ctx.send("Hello! I'm your bot.", delete_after=DELETE_MESSAGE_TIME)
 
-async def ping(ctx, bot, DELETE_MESSAGE_TIME):
+async def ping_cmd(ctx, bot, DELETE_MESSAGE_TIME):
     latency = bot.latency * 1000  # Convert to milliseconds
     await ctx.send(f"Pong! Latency: {latency:.2f} ms", delete_after=DELETE_MESSAGE_TIME)
 

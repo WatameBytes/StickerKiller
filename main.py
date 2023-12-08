@@ -1,28 +1,35 @@
+# Standard library imports
 import asyncio
-import discord
-from discord.ext import commands, tasks
 import datetime
 import os
-from dotenv import load_dotenv
 import random
+
+# Third-party imports
+import discord
+from discord.ext import commands, tasks
+from dotenv import load_dotenv
+
+# Local application imports
 from response_data import response_messages
-from utils import hello, ping, health_cmd
+from utils import hello_cmd, ping_cmd, health_cmd
+
+# Load environment variables
+load_dotenv()
 
 # Globals for configuration
 STICKER_CHAIN_LIMIT = 5
 CLEAN_INTERVAL_SECONDS = 10
-DELETE_MESSAGE_TIME = 5  # Time in seconds after which command messages are deleted
+DELETE_MESSAGE_TIME = 5
 COMMAND_PREFIX = "$"
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN_E1')
-BOT_CREATOR_ID = int(os.getenv('BOT_CREATOR_ID'))  # Add the bot creator's Discord ID
+BOT_CREATOR_ID = int(os.getenv('BOT_CREATOR_ID'))
 
 intents = discord.Intents.default()
-intents.message_content = True  # Enable message content intent
-bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
+intents.message_content = True
 
-# Global set to track ongoing clean operations
+bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 ongoing_clean_operations = set()
 
 @bot.event
@@ -32,11 +39,11 @@ async def on_ready():
 
 @bot.command(help="Greets the user.")
 async def hello(ctx):
-    await hello(ctx, DELETE_MESSAGE_TIME)
+    await hello_cmd(ctx, DELETE_MESSAGE_TIME)
 
 @bot.command(help="Checks the bot's latency.")
 async def ping(ctx):
-    await ping(ctx, bot, DELETE_MESSAGE_TIME)
+    await ping_cmd(ctx, bot, DELETE_MESSAGE_TIME)
 
 @bot.command(help="Checks if the bot is operational.")
 async def health(ctx):
