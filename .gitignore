@@ -1,9 +1,2 @@
-# Environment variables
-.env
-
-# PyCharm project settings
-.idea/
-
-# Python bytecode
-__pycache__/
-*.pyc
+config.json
+node_modules
