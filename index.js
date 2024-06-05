@@ -1,4 +1,4 @@
-require('./commands/Hello.js');
+require('./commands/utilities/Hello.js');
 
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
 const { token } = require('./config.json');
