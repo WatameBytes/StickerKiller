@@ -1,1 +1,5 @@
-const Blacklist = new Set();
+const blacklist = new Set();
+
+module.exports = {
+    blacklist
+}
