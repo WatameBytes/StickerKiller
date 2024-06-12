@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, Message } = require("discord.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -22,7 +22,8 @@ module.exports = {
                 for (const message of messages) {
                     // each message is an array, so message[1] returns the Message object containing author, id, and other properties
                     if (message[1].stickers.size > 0 && message[1].author.id === user_id) {
-                        message.delete();
+                        // message[1] is the actual message object, not message. therefore, the delete function is called on message[1]
+                        message[1].delete();
                     }
                 }
             })
