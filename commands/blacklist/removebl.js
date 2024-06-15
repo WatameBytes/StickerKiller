@@ -1,4 +1,4 @@
-const { blacklist } = require('./blacklist');
+const { blacklist } = require('../../utility/blacklist');
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
