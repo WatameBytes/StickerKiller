@@ -24,7 +24,7 @@ module.exports = {
                 let msgDeleted = 0;
                 for (const message of messages) {
                     // each message is an array, so message[1] returns the Message object containing author, id, and other properties
-                    if (message[1].author.id === user_id && msgDeleted < max_count && !blacklist.has()) {
+                    if (message[1].author.id === user_id && msgDeleted < max_count && blacklist.has() === false) {
                         // message[1] is the actual message object, not message. therefore, the delete function is called on message[1]
                         message[1].delete();
                         msgDeleted++;
