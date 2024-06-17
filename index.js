@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const { Client, Collection, Events, GatewayIntentBits } = require('discord.js');
-const { token, user_id } = require('./config.json');
+const { token, userId, roleId } = require('./config.json');
 require('./commands/utilities/Hello.js');
 // Create a new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -46,7 +46,11 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
 	try {
-		await command.execute(interaction);
+		if (interaction.member.roles.cache.has(roleId) === true || interaction.member.id === userId) {
+			await command.execute(interaction);
+		} else {
+			await interaction.reply("It seems you don't have permission...")
+		}
 	} catch (error) {
 		console.error(error);
 		if (interaction.replied || interaction.deferred) {
