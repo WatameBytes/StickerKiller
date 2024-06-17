@@ -1,5 +1,4 @@
-# Word bank of response messages
-response_messages = [
+const responseMessages = [
     "Sorry, only my creator can utilize me. They would not allow anyone else to use me without their permission.",
     "I am not a tool to be used on everyone's whim. Please talk to my creator if you want to be allowed to use me.",
     "You're lucky I'm even bothering to respond to you. I don't do favors for peasants like you.",
@@ -14,4 +13,8 @@ response_messages = [
     "Oh no... You actually think you can order me around? Amusing.",
     "What makes you think you're entitled to use me?",
     "You must be delusional if you think my creator would allow you to even look in my direction"
-]
+];
+
+module.exports = {
+    responseMessages
+}
