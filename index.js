@@ -47,13 +47,13 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
 	try {
-		if (interaction.member.roles.cache.has(roleId) === true || interaction.member.id === userId) {
+		if (interaction.member.roles.cache.has(roleId) || interaction.member.id === userId) {
 			await command.execute(interaction);
 		} else {
-			await interaction.reply(responseMessages[Math.floor(Math.random() * responseMessages.length)])
+			await interaction.reply(responseMessages[Math.floor(Math.random() * responseMessages.length)]);
 		}
 	} catch (error) {
-		console.error(error);
+		console.error("An error has occurred: " + error);
 		if (interaction.replied || interaction.deferred) {
 			await interaction.followUp({content: 'There was an error while executing this command', ephemeral: true});
 		} else {
