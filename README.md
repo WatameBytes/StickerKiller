@@ -4,7 +4,7 @@ This Discord bot, written in JavaScript, provides several commands for managing 
 
 ## Prerequisites
 
-Before running this bot, make sure you have the node.js installed. You can download node.js here: https://nodejs.org/en/download/package-manager
+Before running this bot, make sure you have Node.js installed. You can download Node.js [here] (https://nodejs.org/en/download/package-manager).
 
 You will also need to create a Discord bot and obtain a token. Follow the official Discord developer documentation to : [Creating a Bot Account](https://discordpy.readthedocs.io/en/stable/discord.html).
 
@@ -30,7 +30,7 @@ If you want any user with a certain role to be able to use the bot, use role ID.
     if (interaction.member.id === userId) {
         await command.execute(interaction);
     } else {
-        await interaction.reply("It seems you don't have permission...")
+        await interaction.reply(responseMessages[Math.floor(Math.random() * responseMessages.length)]);
     }
 ```
 
