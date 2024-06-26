@@ -35,13 +35,13 @@ If you want any user with a certain role to be able to use the bot, use role ID.
 ```
 
 # Bot Commands
-    /addbl [message_id]: Add a message to the blacklist to prevent $1984 from deleting it.
-    /removebl [message_id]: Removes a message from the blacklist, allowing $1984 to delete it.
-    /clearbl: Clear's the blacklist.
-    /clean [user_id] [max_count]: Deletes a specified number of messages with stickers sent by a user.
-    /hello: Greets the user with a simple message.
-    /health: Checks if the bot is operational and displays its latency.
     /1984 [user_id] [max_count]: "Nukes" a specified number of messages from a user by deleting them.
+    /addbl [message_id]: Add a message to the blacklist to prevent $1984 from deleting it.
+    /clean [user_id] [max_count]: Deletes a specified number of messages with stickers sent by a user.
+    /clearbl: Clear's the blacklist.
+    /health: Checks if the bot is operational and displays its latency.
+    /hello: Greets the user with a simple message.
+    /removebl [message_id]: Removes a message from the blacklist, allowing $1984 to delete it.
 
 # Running the Bot
 
