@@ -11,7 +11,24 @@ module.exports = {
         ),
     async execute(interaction) {
         const message = interaction.options.getString('message_id');
-        blacklist.delete(message);
-        await interaction.reply(`Message with id of ${message} removed from blacklist!`);
+        try {
+            if (isNaN(parseInt(message))) {
+                throw new TypeError('User submitted invalid ID.');
+            }
+            if (!blacklist.has(message)) {
+                await interaction.reply('The message doesn\'t exist in the blacklist.')
+                    .then(message => setTimeout(message.delete(), 5000));
+            } else {
+                blacklist.delete(message);
+                await interaction.reply(`Message with id of ${message} removed from blacklist!`);
+            }
+        } catch (error) {
+            console.error(`A(n) ${error.name} has occurred: ${error.message}.`);
+            if (interaction.replied || interaction.deferred) {
+                await interaction.followUp({content: 'There was an error while executing this command!', ephemeral: true});
+            } else {
+                await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+            }
+        }
     }
 }
