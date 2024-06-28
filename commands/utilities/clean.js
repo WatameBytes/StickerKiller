@@ -1,10 +1,10 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder } = require('discord.js');
 const { blacklist } = require('../../utility/blacklist');
 
 module.exports = {
     data: new SlashCommandBuilder()
-        .setName("clean")
-        .setDescription("Deletes a specified number of stickers from a specific user within 100 latest messages.")
+        .setName('clean')
+        .setDescription('Deletes a specified number of stickers from a specific user within 100 latest messages.')
         .addStringOption(option =>
             option.setName('user_id')
             .setDescription('ID of user whose messages you want to delete')
