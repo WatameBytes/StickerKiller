@@ -8,12 +8,13 @@ module.exports = {
         .addStringOption(option =>
             option.setName('message_id')
             .setDescription('The ID of a message you want to remove from the blacklist')
+            .setRequired(true)
         ),
     async execute(interaction) {
         const message = interaction.options.getString('message_id');
         try {
             if (isNaN(parseInt(message))) {
-                throw new TypeError('User submitted invalid ID.');
+                throw new TypeError('Submitted invalid ID.');
             }
             if (!blacklist.has(message)) {
                 await interaction.reply('The message doesn\'t exist in the blacklist.')
@@ -25,9 +26,9 @@ module.exports = {
         } catch (error) {
             console.error(`A(n) ${error.name} has occurred: ${error.message}.`);
             if (interaction.replied || interaction.deferred) {
-                await interaction.followUp({content: 'There was an error while executing this command!', ephemeral: true});
+                await interaction.followUp({content: error.message, ephemeral: true});
             } else {
-                await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+                await interaction.reply({ content: error.message, ephemeral: true });
             }
         }
     }
