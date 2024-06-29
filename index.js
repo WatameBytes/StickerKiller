@@ -50,7 +50,8 @@ client.on(Events.InteractionCreate, async interaction => {
 		if (interaction.member.roles.cache.has(roleId) || interaction.member.id === userId) {
 			await command.execute(interaction);
 		} else {
-			await interaction.reply(responseMessages[Math.floor(Math.random() * responseMessages.length)]);
+			const randomResponse = responseMessages[Math.floor(Math.random() * responseMessages.length)]
+			await interaction.reply(randomResponse);
 		}
 	} catch (error) {
 		console.error(`A(n) ${error.name} has occurred: ${error.message}.`);
