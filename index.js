@@ -50,12 +50,13 @@ client.on(Events.InteractionCreate, async interaction => {
 		if (interaction.member.roles.cache.has(roleId) || interaction.member.id === userId) {
 			await command.execute(interaction);
 		} else {
-			await interaction.reply(responseMessages[Math.floor(Math.random() * responseMessages.length)]);
+			const randomResponse = responseMessages[Math.floor(Math.random() * responseMessages.length)]
+			await interaction.reply(randomResponse);
 		}
 	} catch (error) {
-		console.error(`A(n) ${error.name} has occurred: ${error.message}`);
+		console.error(`A(n) ${error.name} has occurred: ${error.message}.`);
 		if (interaction.replied || interaction.deferred) {
-			await interaction.followUp({content: 'There was an error while executing this command', ephemeral: true});
+			await interaction.followUp({content: 'There was an error while executing this command!', ephemeral: true});
 		} else {
 			await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
 		}

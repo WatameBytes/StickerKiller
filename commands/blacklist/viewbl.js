@@ -9,8 +9,8 @@ module.exports = {
         if (blacklist.size == 0) {
             await interaction.reply('There are no blacklisted messages')
         } else {
-            let setData = Array.from(blacklist).join('\n');
-            await interaction.reply('Blacklist:\n' + setData);
+            const setData = Array.from(blacklist).join('\n');
+            await interaction.reply(`Blacklist:\n'${setData}`);
         }
     }
 }
