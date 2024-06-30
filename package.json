@@ -1,0 +1,14 @@
+{
+  "name": "stickerkiller",
+  "version": "1.0.0",
+  "description": "This Discord bot, written in JavaScript, provides several commands for managing messages in a server. It's designed to help moderate a server by allowing the deletion of messages with stickers and enabling the \"nuke\" of messages from specific users.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.15.3"
+  }
+}
